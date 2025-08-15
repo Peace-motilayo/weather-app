@@ -1,12 +1,11 @@
 body {
-background-image: url('./assets/weather.jpg');
+background-color: black;
 background-size: cover;
 background-position: center;
 margin: 0;
 padding: 0;
 color: white;
 background-attachment: fixed;
-background-repeat: no-repeat;
 }
 .weather {
 margin-top: 50px;
@@ -17,13 +16,18 @@ font-family: 'DM Sans', sans-serif;
 font-size: 30px;
 }
 .weather p {
-color: black;
+color: white;
 }
 .weather input {
 padding: 10px;
 border: none;
 outline: none;
 border-radius: 10px;
+position: absolute;
+transform: translate(-160px, -50px);
+width: 250px;
+background-color: black;
+color: white;
 }
 .weather button {
 background-color: green;
@@ -35,5 +39,64 @@ border: none;
 outline: none;
 border-radius: 10px;
 }
+.leaflet-container {
+  height: 500px;
+  width: 100%;
+  z-index: 0; /* Make sure it's visible */
+}
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.leaflet-control-attribution {
+  display: none;
+}
+.loadingPage span, .loadingResults span, .loadingWeather span{
+  color: white;
+  animation: loading 1s infinite;
+}
+@keyframes loading {
+    0%{
+        transform: rotate(0deg);
+    }
+    20%{
+        transform: rotate(72deg);
+    }
+    30%{
+        transform: rotate(108deg);
+    }
+    40%{
+        transform: rotate(144deg);
+    }
+    50%{
+        transform: rotate(180deg);
+    }
+    60%{
+        transform: rotate(216deg);
+    }
+    70%{
+        transform: rotate(252deg);
+    }
+    80%{
+        transform: rotate(288deg);
+    }
+    90%{
+        transform: rotate(324deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+.locations h2{
+	font-size: 20px;
+}
+.header {
+	display: flex;
+	justify-content: space-around;
+	margin-top: -40px;
+}
 
-
+#closeIcon{
+	transform: translateX(130px);
+}
