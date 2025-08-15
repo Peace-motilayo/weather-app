@@ -50,6 +50,7 @@ const FetchWeather = ({
             setNotFound(true);
             setLoading(false);
           });
+         
       }
       return;
     }
@@ -83,8 +84,10 @@ const FetchWeather = ({
         });
     }, 500);
 
+    
     return () => clearTimeout(timer);
   }, [LOCATION, position, setLoading, setWeather, setNotFound, setPlace]);
+  
 
   // When user clicks a search result
   function handleCityClick(lat, lon, displayName) {
@@ -112,6 +115,43 @@ const FetchWeather = ({
         console.error(err);
         setLoading(false);
       });
+     fetch(`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`)
+  .then(res => res.json())
+  .then(data => {
+    const timeseries = data.properties.timeseries;
+
+    const now = new Date();
+    const nextHourIndex = timeseries.findIndex(item => new Date(item.time) > now);
+
+    if (nextHourIndex === -1) {
+      console.error("No upcoming data found.");
+      return;
+    }
+
+    // Filter: every 3 hours starting from the next hour
+    const interval = 3;
+    const result = [];
+
+    for (let i = nextHourIndex; i < timeseries.length; i += interval) {
+      const entry = timeseries[i];
+      const time = new Date(entry.time);
+      const temp = entry.data.instant.details.air_temperature;
+
+      result.push({
+        time: time.toLocaleString(),
+        temperature: temp
+      });
+    }
+
+    // Display in console or DOM
+    result.forEach(({ time, temperature }) => {
+      console.log(`Time: ${time} | Temp: ${temperature}°C`);
+    });
+  })
+  .catch(err => {
+    console.error("Failed to fetch data from Met.no", err);
+  });
+
   }
 
   return (

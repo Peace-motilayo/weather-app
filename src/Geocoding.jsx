@@ -31,9 +31,11 @@ const Geocoding = ({ setPageLoading, setCurrentLocation, setPosition }) => {
         setPageLoading(false);
       }
     );
+
+    
   }, [setCurrentLocation, setPosition, setPageLoading]);
 
-  return null; // no UI needed here
+  return null; 
 };
 
 export default Geocoding;
