@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Geocoding from './Geocoding.jsx';
 import FetchWeather from './FetchWeather.jsx';
-import Map from './Map.jsx'; // Assuming you have a Map component
+import MapContent from './Map.jsx'; // Assuming you have a Map component
 import './App.css';
 import 'leaflet/dist/leaflet.css';
 
@@ -13,12 +13,18 @@ const Weather = () => {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
   const [place, setPlace] = useState('');
+  const [mapPlace, setMapPlace] = useState('');
   const [notFound, setNotFound] = useState(false);
   const [LOCATION, setLOCATION] = useState('');
 // Show the searching space
   const [showSearch, setShowSearch] = useState(false);
   //Autofocus the search input
   const inputRef = useRef(null);
+  const [details, setDetails] = useState(false);
+
+  const Details = () => {
+	  setDetails(true);
+  }
 
    useEffect(() => {
     if (showSearch && inputRef.current) {
@@ -41,11 +47,9 @@ const Weather = () => {
 	      <div className='header'>
 	      {!showSearch && (
 	      <div className='locations'>
-	      {currentLocation ? (
-		      <h2>{currentLocation}</h2>
-	      ):(
-		      <h2>{place}</h2>
-	      )}
+	      {currentLocation || place || mapPlace ? (
+  <h2>{currentLocation || place || mapPlace}</h2>
+) : null}
 	      </div>
 	      )}
 	      <p onClick={() => { setShowSearch(!showSearch) }}>
@@ -75,19 +79,16 @@ const Weather = () => {
           />
 	  {!showSearch && (
 		  <>
-          <Map position={position} setPosition={setPosition} />
+          <MapContent position={position} setPosition={setPosition} mapPlace={mapPlace} setMapPlace={setMapPlace} setCurrentLocation={setCurrentLocation} setPlace={setPlace} />
 
           {loading ? (
             <p className='loadingWeather'><span className='material-symbols-outlined'>progress_activity</span></p>
           ) : weather ? (
             <>
-	      <div style={{color: 'white'}} >
+	      <div className="weatherDetails" >
 		  <h2>{weather.main.temp} °C</h2>
               <p style={{ textTransform: 'capitalize' }}> {weather.weather[0].description}</p>
-              <p>
-                Local Time:{' '}
-                {new Date(Date.now() + weather.timezone * 1000).toUTCString()}
-              </p>
+              <input type="button" value="Details -->" onClick={Details} />
 	      </div>
             </>
           ) : (

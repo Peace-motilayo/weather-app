@@ -6,14 +6,22 @@ margin: 0;
 padding: 0;
 color: white;
 background-attachment: fixed;
+height:100%;
+}
+html, #root{
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 .weather {
 margin-top: 50px;
 text-align: center;
 font-family: 'DM Sans', sans-serif;
+
 }
 .weather h2 {
 font-size: 30px;
+margin-bottom: 10px;
 }
 .weather p {
 color: white;
@@ -43,11 +51,6 @@ border-radius: 10px;
   height: 500px;
   width: 100%;
   z-index: 0; /* Make sure it's visible */
-}
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
 }
 .leaflet-control-attribution {
   display: none;
@@ -100,3 +103,8 @@ html, body, #root {
 #closeIcon{
 	transform: translateX(130px);
 }
+.weatherDetails{
+	color: white;
+	
+}
+

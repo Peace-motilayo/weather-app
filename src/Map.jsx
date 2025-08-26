@@ -1,66 +1,54 @@
-import React, { useEffect, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L from "leaflet";
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Fix marker icons
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+// Component to handle map click events
+const LocationMarker = ({position, setPosition, mapPlace, setMapPlace, setCurrentLocation, setPlace}) => {
+  useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng;
+      setPosition([lat, lng]);
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+	    .then(res => res.json())
+	    .then(data => {
+		const dataName = data.display_name;
+		setCurrentLocation('');
+		setPlace('');
+		setMapPlace(dataName.split(',')[0]);
 
-// Helper to change center dynamically without remounting
-function ChangeView({ center }) {
-  const map = useMap();
-  useEffect(() => {
-    if (center) {
-      map.setView(center, 13);
-    }
-  }, [center, map]);
+	    })
+	    .catch(err => {
+		    console.log(err);
+	    })
+    },
+  });
   return null;
-}
+};
 
-export default function Map({ position, setPosition }) {
-  useEffect(() => {
-    if (!position) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setPosition([pos.coords.latitude, pos.coords.longitude]);
-        },
-        () => {
-          // fallback: London
-          setPosition([51.505, -0.09]);
-        }
-      );
-    }
-  }, [position, setPosition]);
-
-  // If position is still null, show empty div until it's ready
-  if (!position) return <div style={{ height: "400px" }}>Loading map...</div>;
-
+const MapContent = ({ position, setPosition, mapPlace, setMapPlace, setCurrentLocation, setPlace }) => {
   return (
-    <div style={{ height: "400px", width: "100%" }}>
-      <MapContainer
-        center={position}
-        zoom={13}
-        style={{ height: "100%", width: "100%" }}
-      >
-        <ChangeView center={position} />
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; OpenStreetMap contributors"
-        />
+    <MapContainer
+      center={position || [6.5244, 3.3792]} // fallback: Lagos, Nigeria
+      zoom={13}
+      style={{ height: "500px", width: "100%" }}
+    >
+      {/* Satellite with labels (hybrid) */}
+      <TileLayer
+        url="https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
+        subdomains={["mt0", "mt1", "mt2", "mt3"]}
+      />
+
+      {/* Marker for current position */}
+      {position && (
         <Marker position={position}>
-          <Popup>
-            {position ? "You are here" : "Default location"}
-          </Popup>
+          <Popup>You are here 📍</Popup>
         </Marker>
-      </MapContainer>
-    </div>
+      )}
+
+      {/* Handle clicks on the map */}
+      <LocationMarker position={position} setPosition={setPosition} mapPlace={mapPlace} setMapPlace={setMapPlace} setCurrentLocation={setCurrentLocation} setPlace={setPlace} />
+    </MapContainer>
   );
-}	
+};
+
+export default MapContent;
