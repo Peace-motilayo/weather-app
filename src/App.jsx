@@ -88,7 +88,7 @@ const Weather = () => {
 	      <div className="weatherDetails" >
 		  <h2>{weather.main.temp} °C</h2>
               <p style={{ textTransform: 'capitalize' }}> {weather.weather[0].description}</p>
-              <input type="button" value="Details -->" onClick={Details} />
+              <input type="button" value="Details -->" onClick={Details} style={{ marginTop: "40px", backgroundColor: "blue", color: "white", border: "none", padding: "10px", borderRadius: "5px", cursor: "pointer", marginLeft: "30px" }} />
 	      </div>
             </>
           ) : (
