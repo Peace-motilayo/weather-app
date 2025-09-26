@@ -50,6 +50,7 @@ const FetchWeather = ({
             setNotFound(true);
             setLoading(false);
           });
+
          
       }
       return;

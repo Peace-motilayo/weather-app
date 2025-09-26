@@ -25,8 +25,9 @@ const LocationMarker = ({position, setPosition, mapPlace, setMapPlace, setCurren
   return null;
 };
 
-const MapContent = ({ position, setPosition, mapPlace, setMapPlace, setCurrentLocation, setPlace }) => {
+const MapContent = ({ position, setPosition, mapPlace, setMapPlace, setCurrentLocation, setPlace, detailsRef}) => {
   return (
+	  <div ref={el => detailsRef.current[0] = el}>
     <MapContainer
       center={position || [6.5244, 3.3792]} // fallback: Lagos, Nigeria
       zoom={13}
@@ -48,6 +49,7 @@ const MapContent = ({ position, setPosition, mapPlace, setMapPlace, setCurrentLo
       {/* Handle clicks on the map */}
       <LocationMarker position={position} setPosition={setPosition} mapPlace={mapPlace} setMapPlace={setMapPlace} setCurrentLocation={setCurrentLocation} setPlace={setPlace} />
     </MapContainer>
+	  </div>
   );
 };
 
